@@ -79,6 +79,33 @@
         )
     }
 
+    function Display() {
+        return (
+            <ul>
+                <li key="all"><span onclick={() => {
+                    this.setState({
+                        currentRep: 'all'
+                    })
+                }}></span></li>
+                <li key="javascript"><span onclick={() => {
+                    this.setState({
+                        currentRep: 'javascript'
+                    })
+                }}></span></li>
+                <li key="ruby"><span onclick={() => {
+                    this.setState({
+                        currentRep: 'ruby'
+                    })
+                }}></span></li>
+                <li key="python"><span onclick={() => {
+                    this.setState({
+                        currentRep: 'python'
+                    })
+                }}></span></li>
+            </ul>
+        )
+    }
+
     class App extends React.Component {
       
     constructor(props){
@@ -89,7 +116,8 @@
             javascript: [],
             ruby: [],
             python: [],
-            currentRep: 'python'
+            currentRep: 'all',
+            loading: true
         }
     }
 
@@ -144,7 +172,7 @@
 
          API.fetchPopularRepos('javascript')
          .then((javascript) => {
-             all.forEach(element => {
+             javascript.forEach(element => {
                  this.setState((currentState) => {
                      return {
                          javascript: currentState.javascript.concat([{
@@ -155,18 +183,55 @@
                          }])
                      }
                  })
-             });
-         })
+             })
+        })
+        .then(() => {
+            this.setState({
+                loading: false
+            })
+        })
          
         
     }    
     
     render() {
-        return (this.state.currentRep === 'all' ? <div><Lists list = {this.state.all}/></div>
+
+        if(this.state.loading){
+            return <Loading />
+        }
+
+        return (
+                <div>
+                <ul>
+                    <li key="all"><span onclick={() => {
+                        this.setState({
+                            currentRep: 'all'
+                        })
+                    }}></span></li>
+                    <li key="javascript"><span onclick={() => {
+                        this.setState({
+                            currentRep: 'javascript'
+                        })
+                    }}></span></li>
+                    <li key="ruby"><span onclick={() => {
+                        this.setState({
+                            currentRep: 'ruby'
+                        })
+                    }}></span></li>
+                    <li key="python"><span onclick={() => {
+                        this.setState({
+                            currentRep: 'python'
+                        })
+                    }}></span></li>
+                </ul>   
+                </div>
+                this.state.currentRep === 'all' ? <div><Lists list = {this.state.all}/></div>
                 : this.state.currentRep === 'ruby' ? <div><Lists list = {this.state.ruby} /></div>
                 : this.state.currentRep === 'python' ? <div><Lists list = {this.state.python} /></div>
-                : this.state.currentRep === 'javascript' ? <div><Lists list = {this.state.javascript} /></div>
-                : null )
+                : this.state.currentRep === 'javascript' ? <Lists list = {this.state.javascript} /></div>
+                : null 
+                
+                )
       }
     }
 
